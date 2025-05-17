@@ -20,8 +20,8 @@ PGM::PGM(const PGM& other)
     this->pixels = other.pixels;
 }
 
-PGM& PGM::operator=(const PGM& other) { //енъма и хедъра са с едно и също име -> трябва или да се промени името,
-                                        //или да намеря как да разбере, че не се има предвид enum, а обекта
+PGM& PGM::operator=(const PGM& other) 
+{
     if(this != &other)
     {
         this->name = other.name;
@@ -42,9 +42,9 @@ void PGM::load(const std::string& filename)
         throw std::runtime_error("Can't open the file!");
     }
 
-    std::string format;
-    file >> format;
-    if(format != "P5")
+    std::string header;
+    file >> header;
+    if(header != "P5")
     {
         throw std::runtime_error("Invalid PGM format!");
     }
@@ -61,7 +61,7 @@ void PGM::load(const std::string& filename)
     }
     file.unget();
 
-    file >> width >> height >> maxGrayValue;
+    file >> width >> " " >> height >> "\n" >> maxGrayValue;
     file.get();
 
     if(maxGrayValue > 255)
@@ -99,6 +99,7 @@ void PGM::save(const std::string& filename) const
             file.put(static_cast<char>(pixel));
         }
     }
+    file.close();
 }
 
 void PGM::grayscale() {} //вече е grayscale
@@ -131,11 +132,11 @@ void PGM::rotate(Direction direction)
     if(direction == Left)
     {
         rotated.resize(width, std::vector<int>(height));
-        for(int i = 0; i < height; i++)
+        for(int y = 0; y < height; y++)
         {
-            for(int j = 0; j < width; j++)
+            for(int x = 0; x < width; x++)
             {
-                rotated[width - j - 1][i] = pixels[i][j];
+                rotated[width - x - 1][y] = pixels[y][x];
             }
         }
         std::swap(width, height);
@@ -143,11 +144,11 @@ void PGM::rotate(Direction direction)
     else
     {
         rotated.resize(width, std::vector<int>(height));
-        for(int i = 0; i < height; i++)
+        for(int y = 0; y < height; y++)
         {
-            for(int j = 0; j < width; j++)
+            for(int x = 0; x < width; x++)
             {
-                rotated[j][height - i - 1] = pixels[i][j];
+                rotated[x][height - y - 1] = pixels[y][x];
             }
         }
         std::swap(width, height);

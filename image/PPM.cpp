@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -8,6 +7,33 @@
 #include "Image.h"
 
 PPM::PPM(const std::string& filename)
+{
+    load(filename);
+}
+
+PPM::PPM(const PPM& other)
+{
+    this->filename = other.filename;
+    this->width = other.width;
+    this->height = other.height;
+    this->maxColorValue = other.maxColorValue;
+    this->pixels = other.pixels;
+}
+
+PPM& PPM::operator=(const PPM& other)
+{
+    if(this != &other)
+    {
+        this->filename = other.filename;
+        this->width = other.width;
+        this->height = other.height;
+        this->maxColorValue = other.maxColorValue;
+        this->pixels = other.pixels;
+    }
+    return *this;
+}
+
+void PPM::load(const std::string& filename)
 {
     std::ifstream file(filename, std::ios::binary);
 
@@ -22,6 +48,18 @@ PPM::PPM(const std::string& filename)
     {
         throw std::invalid_argument("Invalid PPM format!");
     }
+
+    //пропускане на коментари
+    char ch;
+    file.get(ch);
+    while(ch == '#')
+    {
+        while(file.get(ch) && ch != '\n')
+        {
+            file.get(ch);
+        }
+    }
+    file.unget();
 
     file >> width >> height >> maxColorValue;
     file.get();
@@ -38,24 +76,26 @@ PPM::PPM(const std::string& filename)
     }
 }
 
-PPM::PPM(const PPM& other)
+void PPM::save(const std::string& filename) const
 {
-    this->width = other.width;
-    this->height = other.height;
-    this->maxColorValue = other.maxColorValue;\
-    this->pixels = other.pixels;
-}
-
-PPM& PPM::operator=(const PPM& other)
-{
-    if(this != &other)
+    std::ofstream file(filename, std::ios::binary);
+    if(!file.is_open())
     {
-        this->width = other.width;
-        this->height = other.height;
-        this->maxColorValue = other.maxColorValue;
-        this->pixels = other.pixels;
+        throw std::runtime_error("Can't open the file!");
     }
-    return *this;
+
+    file << "P6" << std::endl;
+    file << width << " " << height << std::endl;
+    file << maxColorValue << std::endl;
+
+    for(const auto& row : pixels)
+    {
+        for(const auto& pixel : row)
+        {
+            file.write(reinterpret_cast<const char*>(&pixel), sizeof(Pixel));
+        }
+    }
+    file.close();
 }
 
 void PPM::grayscale()
@@ -108,7 +148,57 @@ void PPM::negative()
     }
 }
 
+void PPM::rotate(Direction direction)
+{
+    std::vector<std::vector<Pixel>> rotated;
+    if(direction == Left)
+    {
+        rotated.resize(width, std::vector<Pixel>(height));
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                rotated[width - x - 1][y] = pixels[y][x];
+            }
+        }
+        std::swap(width, height);
+    }
+    else
+    {
+        rotated.resize(width, std::vector<Pixel>(height));
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                rotated[x][height - y - 1] = pixels[y][x];
+            }
+        }
+        std::swap(width, height);
+    }
+    pixels = std::move(rotated);
+}
+
+std::string PPM::getName() const
+{
+    return filename;
+}
+
 Type PPM::getType()
 {
     return Type::PPM;
+}
+
+int PPM::getWidth() const
+{
+    return width;
+}
+
+int PPM::getHeight() const
+{
+    return height;
+}
+
+Image* PPM::clone() const
+{
+    return new PPM(*this);
 }
