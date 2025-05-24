@@ -15,9 +15,65 @@ PBM::PBM(const std::string& filename)
 {
     load(filename);
 }
+PBM::PBM(const PBM& first, const PBM& second, const std::string& direction)
+{
+    if(first.width != second.width || first.height != second.height)
+    {
+        throw std::invalid_argument("Images must have the same sizes for a collage!");
+    }
+
+    this->type = Type::PBM;
+
+    if(direction == "horizontal")
+    {
+        width = first.width + second.width;
+        height = first.height;
+        pixels.resize(height, std::vector<bool>(width));
+
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < first.width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+            for(int x = 0; x < second.width; x++)
+            {
+                pixels[y][x + first.width] = second.pixels[y][x];
+            }
+        }
+    }
+    else if(direction == "vertical")
+    {
+        width = first.width;
+        height = first.height + second.height;
+        pixels.resize(height, std::vector<bool>(width));
+
+        for(int y = 0; y < first.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+        }
+
+        for(int y = 0; y < second.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y + first.height][x] = second.pixels[y][x];
+            }
+        }
+    }
+    else
+    {
+        throw std::invalid_argument("Direction must be horizontal or vertical!");
+    }
+
+    name = "collage.pgm"; //името ще се замести от Session.cpp
+}
 PBM::PBM(const PBM& other)
 {
-    this->filename = other.filename;
+    this->name = other.name;
     this->width = other.width;
     this->height = other.height;
     this->pixels = other.pixels;
@@ -26,7 +82,7 @@ PBM& PBM::operator=(const PBM& other)
 {
     if(this != &other)
     {
-        this->filename = other.filename;
+        this->name = other.name;
         this->width = other.width;
         this->height = other.height;
         this->pixels = other.pixels;
@@ -155,12 +211,17 @@ void PBM::rotate(Direction direction)
 
 std::string PBM::getName() const
 {
-    return filename;
+    return name;
 }
 
 Type PBM::getType() 
 {
     return Type::PBM;
+}
+
+void PBM::setName(const std::string& newName)
+{
+    name = newName;
 }
 
 int PBM::getWidth() const

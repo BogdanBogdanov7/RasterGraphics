@@ -15,10 +15,66 @@ PPM::PPM(const std::string& filename)
 {
     load(filename);
 }
+PPM::PPM(const PPM& first, const PPM& second, const std::string& direction)
+{
+    if(first.width != second.width || first.height != second.height)
+    {
+        throw std::invalid_argument("Images must have the same sizes for a collage!");
+    }
 
+    this->maxColorValue = first.maxColorValue;
+    this->type = first.type;
+
+    if(direction == "horizontal")
+    {
+        width = first.width + second.width;
+        height = first.height;
+        pixels.resize(height, std::vector<Pixel>(width));
+
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < first.width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+            for(int x = 0; x < second.width; x++)
+            {
+                pixels[y][x + first.width] = second.pixels[y][x];
+            }
+        }
+    }
+    else if(direction == "vertical")
+    {
+        width = first.width;
+        height = first.height + second.height;
+        pixels.resize(height, std::vector<Pixel>(width));
+
+        for(int y = 0; y < first.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+        }
+
+        for(int y = 0; y < second.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y + first.height][x] = second.pixels[y][x];
+            }
+        }
+    }
+    else
+    {
+        throw std::invalid_argument("Direction must be horizontal or vertical!");
+    }
+
+    name = "collage.pgm"; //името ще се замести от Session.cpp
+}
 PPM::PPM(const PPM& other)
 {
-    this->filename = other.filename;
+    this->name = other.name;
     this->width = other.width;
     this->height = other.height;
     this->maxColorValue = other.maxColorValue;
@@ -29,7 +85,7 @@ PPM& PPM::operator=(const PPM& other)
 {
     if(this != &other)
     {
-        this->filename = other.filename;
+        this->name = other.name;
         this->width = other.width;
         this->height = other.height;
         this->maxColorValue = other.maxColorValue;
@@ -187,12 +243,17 @@ void PPM::rotate(Direction direction)
 
 std::string PPM::getName() const
 {
-    return filename;
+    return name;
 }
 
 Type PPM::getType()
 {
     return Type::PPM;
+}
+
+void PPM::setName(const std::string& newName)
+{
+    name = newName;
 }
 
 int PPM::getWidth() const

@@ -7,13 +7,14 @@
 class PBM : public Image
 {
 private:
-    std::string filename;
+    std::string name;
     int width;
     int height;
     std::vector<std::vector<bool>> pixels; //true е за черно, false е за бяло
 public:
     PBM();
     PBM(const std::string& filename);
+    PBM(const PBM& first, const PBM& second, const std::string& direction);
     PBM(const PBM& other);
     PBM& operator=(const PBM& other);
 
@@ -27,6 +28,8 @@ public:
 
     std::string getName() const override;
     Type getType() override;
+
+    void setName(const std::string& newName) override;
 
     int getWidth() const override;
     int getHeight() const override;

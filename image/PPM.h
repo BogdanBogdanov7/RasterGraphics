@@ -12,7 +12,7 @@ struct Pixel
 class PPM : public Image
 {
 private:
-    std::string filename;
+    std::string name;
     int width, height;
     int maxColorValue;
     std::vector<std::vector<Pixel>> pixels;
@@ -20,6 +20,7 @@ private:
 public:
     PPM();
     PPM(const std::string& filename);
+    PPM::PPM(const PPM& first, const PPM& second, const std::string& direction);
     PPM(const PPM& other);
     PPM& operator=(const PPM& other);
 
@@ -33,6 +34,8 @@ public:
     
     std::string getName() const override;
     Type getType() override;
+
+    void setName(const std::string& newName) override;
     
     int getWidth() const override;
     int getHeight() const override;

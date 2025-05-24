@@ -19,6 +19,8 @@ public:
     void undo();
     void save();
     void saveAs(const std::string& name);
+    
+    void collage(const std::string& direction, const std::string& firstImageName, const std::string& secondImageName, const std::string& resultImageName);
 
     void info() const;
 
