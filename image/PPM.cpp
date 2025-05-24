@@ -6,6 +6,11 @@
 #include "PPM.h"
 #include "Image.h"
 
+PPM::PPM()
+{
+    this->type = Type::PPM;
+}
+
 PPM::PPM(const std::string& filename)
 {
     load(filename);
@@ -74,6 +79,8 @@ void PPM::load(const std::string& filename)
             file.read(reinterpret_cast<char*>(&p), sizeof(Pixel));
         }
     }
+
+    file.close();
 }
 
 void PPM::save(const std::string& filename) const

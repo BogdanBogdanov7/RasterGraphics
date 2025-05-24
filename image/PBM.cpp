@@ -6,6 +6,11 @@
 #include <sstream>
 #include "PBM.h"
 
+PBM::PBM()
+{
+    this->type = Type::PBM;
+}
+
 PBM::PBM(const std::string& filename)
 {
     load(filename);

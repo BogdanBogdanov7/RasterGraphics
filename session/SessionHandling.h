@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include <memory>
 #include "Session.h"
 
-class SessionHandler
+class SessionHandling
 {
 private:
     std::vector<Session*> sessions;
@@ -21,7 +20,9 @@ public:
     void undo();
     void save();
     void saveAs(const std::string& name);
+    void help();
+    void exit();
     void sessionInfo() const;
 
-    ~SessionHandler();
+    ~SessionHandling();
 };

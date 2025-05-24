@@ -1,0 +1,117 @@
+#include <iostream>
+#include <vector>
+#include "../image/Image.h"
+#include "Session.h"
+#include "../transformation/Transformation.h"
+
+Session::Session(int id)
+{
+    this->id = id;
+}
+
+void Session::addImage(const Image* const someImage)
+{
+    image.push_back(someImage->clone());
+}
+
+void Session::addTransformation(const Transformation* const transformation)
+{
+    transformations.push_back(transformation->clone());
+}
+
+void Session::undo() //!!!toDO!!!
+{
+    if(transformations.empty())
+    {
+        std::cout << "No transformations have been made!" << std::endl;
+        return;
+    }
+
+    delete transformations.back();
+    transformations.pop_back();
+
+    std::cout << "The last transformation is undone!" << std::endl;
+}
+
+void Session::save()
+{
+    for(Image* img : image)
+    {
+        Image* changedImage = img->clone();
+        for(Transformation* t : transformations)
+        {
+            t->apply(changedImage);
+        }
+        changedImage->save(img->getName());
+        delete changedImage;
+    }
+    transformations.clear();
+}
+
+void Session::saveAs(const std::string& name)
+{
+    if(!image.empty())
+    {
+        Image* changedImage = image[0]->clone();
+        for(Transformation* transformation : transformations)
+        {
+            transformation->apply(changedImage);
+        }
+        changedImage->save(name);
+        delete changedImage;
+    }
+    transformations.clear();
+}
+
+void Session::info() const
+{
+    std::cout << "Session ID: " << id << std::endl;
+    
+    if(!image.empty())
+    {
+        std::cout << "Name of images in the session: ";
+        for(const Image* img : image)
+        {
+            std::cout << img->getName() << " ";
+        }
+    }
+    else
+    {
+        std::cout << "no images found!" << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << "Pending transformations: ";
+    if(!transformations.empty())
+    {
+        for(const Transformation* transformation : transformations)
+        {
+            std::cout << transformation->getName() << " ";
+        }
+    }
+    else
+    {
+        std::cout << "no transformations found!" << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+int Session::getId() const
+{
+    return id;
+}
+
+Session::~Session()
+{
+    for(Image* images : image)
+    {
+        delete images;
+    }
+    image.clear();
+
+    for(Transformation* transformation : transformations)
+    {
+        delete transformation;
+    }
+    transformations.clear();
+}

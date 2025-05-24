@@ -6,9 +6,72 @@
 #include <sstream>
 #include "PGM.h"
 
+PGM::PGM()
+{
+    this->type = Type::PGM;
+}
+
 PGM::PGM(const std::string& filename)
 {
     load(filename);
+}
+
+PGM::PGM(const PGM& first, const PGM& second, const std::string& direction)
+{
+    if(first.width != second.width || first.height != second.height)
+    {
+        throw std::invalid_argument("Images must have the same sizes for a collage!");
+    }
+
+    this->maxGrayValue = first.maxGrayValue;
+    this->type = first.type;
+
+    if(direction == "horizontal")
+    {
+        width = first.width + second.width;
+        height = first.height;
+        pixels.resize(height, std::vector<int>(width));
+
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < first.width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+            for(int x = 0; x < second.width; x++)
+            {
+                pixels[y][x + first.width] = second.pixels[y][x];
+            }
+        }
+    }
+    else if(direction == "vertical")
+    {
+        width = first.width;
+        height = first.height + second.height;
+        pixels.resize(height, std::vector<int>(width));
+
+        for(int y = 0; y < first.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y][x] = first.pixels[y][x];
+            }
+        }
+
+        for(int y = 0; y < second.height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y + first.height][x] = second.pixels[y][x];
+            }
+        }
+    }
+    else
+    {
+        throw std::invalid_argument("Direction must be horizontal or vertical!");
+    }
+
+    name = "collage.pgm"; //името ще се замести от Session.cpp
 }
 
 PGM::PGM(const PGM& other)
@@ -78,6 +141,8 @@ void PGM::load(const std::string& filename)
         }
     }
     name = filename;
+
+    file.close();
 }
 
 void PGM::save(const std::string& filename) const
@@ -164,6 +229,11 @@ std::string PGM::getName() const
 Type PGM::getType()
 {
     return Type::PGM;
+}
+
+void PGM::setName(const std::string& newName)
+{
+    name = newName;
 }
 
 int PGM::getWidth() const

@@ -12,6 +12,7 @@ private:
     int height;
     std::vector<std::vector<bool>> pixels; //true е за черно, false е за бяло
 public:
+    PBM();
     PBM(const std::string& filename);
     PBM(const PBM& other);
     PBM& operator=(const PBM& other);

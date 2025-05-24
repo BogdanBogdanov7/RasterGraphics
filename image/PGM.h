@@ -14,7 +14,9 @@ private:
     std::vector<std::vector<int>> pixels;
 
 public:
+    PGM();
     PGM(const std::string& filename);
+    PGM(const PGM& first, const PGM& second, const std::string& direction);
     PGM(const PGM& other);
     PGM& operator=(const PGM& other);
     
@@ -28,6 +30,9 @@ public:
     
     std::string getName() const override;
     Type getType() override;
+
+    void setName(const std::string& newName) override;
+    
     int getWidth() const override;
     int getHeight() const override;
     

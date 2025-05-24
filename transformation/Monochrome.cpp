@@ -8,6 +8,11 @@ void Monochrome::apply(Image* image) const
     image->monochrome();
 }
 
+std::string Monochrome::getName() const
+{
+    return "monochrome";
+}
+
 Transformation* Monochrome::clone() const
 {
     return new Monochrome(*this);

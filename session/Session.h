@@ -14,8 +14,8 @@ private:
 public:
     Session(int id);
 
-    void addImage(Image* image);
-    void addTransformation(Transformation* transformation);
+    void addImage(const Image* const image);
+    void addTransformation(const Transformation* const transformation);
     void undo();
     void save();
     void saveAs(const std::string& name);

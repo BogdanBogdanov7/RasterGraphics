@@ -8,6 +8,9 @@ enum Direction {Left, Right};
 
 class Image
 {
+protected:
+    Type type;
+
 public:
     virtual void load(const std::string& filename) = 0;
     virtual void save(const std::string& filename) const = 0;
@@ -19,6 +22,8 @@ public:
 
     virtual std::string getName() const = 0;
     virtual Type getType() = 0;
+
+    virtual void setName(const std::string& newName) = 0;
     
     virtual int getWidth() const = 0;
     virtual int getHeight() const = 0;

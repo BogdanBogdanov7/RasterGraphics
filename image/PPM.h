@@ -18,6 +18,7 @@ private:
     std::vector<std::vector<Pixel>> pixels;
 
 public:
+    PPM();
     PPM(const std::string& filename);
     PPM(const PPM& other);
     PPM& operator=(const PPM& other);
@@ -29,7 +30,6 @@ public:
     void monochrome() override;
     void negative() override;
     void rotate(Direction direction) override;
-    void save(const std::string& filename) const override;
     
     std::string getName() const override;
     Type getType() override;
