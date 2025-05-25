@@ -20,9 +20,11 @@ public:
     void undo();
     void save();
     void saveAs(const std::string& name);
+    void collage(const std::string& direction, const std::string& firstImageName, const std::string& secondImageName, const std::string& resultImageName);
     void help();
     void exit();
     void sessionInfo() const;
+    Session* getCurrentSession() const;
 
     ~SessionHandling();
 };

@@ -246,7 +246,7 @@ std::string PPM::getName() const
     return name;
 }
 
-Type PPM::getType()
+Type PPM::getType() const
 {
     return Type::PPM;
 }

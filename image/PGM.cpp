@@ -226,7 +226,7 @@ std::string PGM::getName() const
     return name;
 }
 
-Type PGM::getType()
+Type PGM::getType() const
 {
     return Type::PGM;
 }

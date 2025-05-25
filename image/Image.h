@@ -21,7 +21,7 @@ public:
     virtual void rotate(Direction direction) = 0;
 
     virtual std::string getName() const = 0;
-    virtual Type getType() = 0;
+    virtual Type getType() const = 0;
 
     virtual void setName(const std::string& newName) = 0;
     

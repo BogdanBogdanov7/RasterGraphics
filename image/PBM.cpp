@@ -214,7 +214,7 @@ std::string PBM::getName() const
     return name;
 }
 
-Type PBM::getType() 
+Type PBM::getType() const
 {
     return Type::PBM;
 }

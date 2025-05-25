@@ -33,7 +33,7 @@ public:
     void rotate(Direction direction) override;
     
     std::string getName() const override;
-    Type getType() override;
+    Type getType() const override;
 
     void setName(const std::string& newName) override;
     
