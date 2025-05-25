@@ -4,6 +4,10 @@
 #include "../image/PBM.h"
 #include "../image/PGM.h"
 #include "../image/PPM.h"
+#include "../transformation/Grayscale.h"
+#include "../transformation/Rotate.h"
+#include "../transformation/Monochrome.h"
+#include "../transformation/Negative.h"
 
 void SessionHandling::load(const std::vector<std::string>& filenames)
 {
@@ -41,6 +45,129 @@ Session* SessionHandling::getCurrentSession() const
         }
     }
     return nullptr;
+}
+
+void SessionHandling::undo()
+{
+    Session* current = getCurrentSession();
+    if(current)
+    {
+        current->undo();
+    }
+    else
+    {
+        std::cout << "No session found." << std::endl;
+    }
+}
+
+void SessionHandling::sessionInfo() const
+{
+    Session* current = getCurrentSession();
+    if(current)
+    {
+        current->info();
+    }
+    else
+    {
+        std::cout << "No session found." << std::endl;
+    }
+}
+
+void SessionHandling::save()
+{
+    Session* current = getCurrentSession();
+    if(current)
+    {
+        current->save();
+    }
+    else
+    {
+        std::cout << "No session found." << std::endl;
+    }
+}
+
+void SessionHandling::saveAs(const std::string& name)
+{
+    Session* current = getCurrentSession();
+    if(current)
+    {
+        current->saveAs(name);
+    }
+    else
+    {
+        std::cout << "No session found." << std::endl;
+    }
+}
+
+void SessionHandling::addTransformation(const std::string& tName)
+{
+    Session* current = getCurrentSession();
+    
+    if(!current)
+    {
+        std::cout << "No sessions are active!" << std::endl;
+        return;
+    }
+
+    Transformation* transformation = nullptr;
+
+    if(tName == "grayscale")
+    {
+        transformation = new Grayscale();
+    }
+    else if(tName == "monochrome")
+    {
+        transformation = new Monochrome();
+    }
+    else if(tName == "negative")
+    {
+        transformation = new Negative();
+    }
+
+    if(transformation)
+    {
+        current->addTransformation(transformation);
+        std::cout << "Transformation '" << tName << "' added." << std::endl;
+    }
+    else
+    {
+        std::cout << "Unknown transformation!" << std::endl;
+    }
+}
+
+void SessionHandling::addTransformation(const std::string& tName, const std::string& direction)
+{
+    Session* current = getCurrentSession();
+    
+    if(!current)
+    {
+        std::cout << "No sessions are active!" << std::endl;
+        return;
+    }
+
+    if(tName == "rotate")
+    {
+        Transformation* transformation = nullptr;
+
+        if(direction == "left")
+        {
+            transformation = new Rotate(Direction::Left);
+        }
+        else if(direction == "right")
+        {
+            transformation = new Rotate(Direction::Right);
+        }
+
+        if(transformation)
+        {
+            current->addTransformation(transformation);
+            std::cout << "Rotation transformation added." << std::endl;
+        }
+        else
+        {
+            std::cout << "No such direction - " << direction << std::endl;
+        }
+    }
 }
 
 void SessionHandling::collage(const std::string& direction, const std::string& firstImageName, const std::string& secondImageName, const std::string& resultImageName)

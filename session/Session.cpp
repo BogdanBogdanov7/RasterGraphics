@@ -22,7 +22,7 @@ void Session::addTransformation(const Transformation* const transformation)
     transformations.push_back(transformation->clone());
 }
 
-void Session::undo() //!!!toDO!!!
+void Session::undo()
 {
     if(transformations.empty())
     {
@@ -178,6 +178,11 @@ void Session::info() const
 int Session::getId() const
 {
     return id;
+}
+
+const std::vector<Image*>& Session::getImage() const
+{
+    return image;
 }
 
 Session::~Session()

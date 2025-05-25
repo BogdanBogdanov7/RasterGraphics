@@ -1,4 +1,3 @@
-#pragma once
 #include "../image/Image.h"
 #include "Transformation.h"
 #include "Monochrome.h"

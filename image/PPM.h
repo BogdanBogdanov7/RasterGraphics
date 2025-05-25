@@ -20,7 +20,7 @@ private:
 public:
     PPM();
     PPM(const std::string& filename);
-    PPM::PPM(const PPM& first, const PPM& second, const std::string& direction);
+    PPM(const PPM& first, const PPM& second, const std::string& direction);
     PPM(const PPM& other);
     PPM& operator=(const PPM& other);
 

@@ -124,7 +124,7 @@ void PGM::load(const std::string& filename)
     }
     file.unget();
 
-    file >> width >> " " >> height >> "\n" >> maxGrayValue;
+    file >> width >> height >> maxGrayValue;
     file.get();
 
     if(maxGrayValue > 255)

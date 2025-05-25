@@ -6,8 +6,8 @@
 class Utils
 {
 public:
-    virtual bool endsWith(const std::string& str, const std::string& suffix) = 0;
+    static bool endsWith(const std::string& str, const std::string& suffix);
     virtual std::string getFileExtension(const std::string& filename) = 0;
     virtual std::string getFileBaseName(const std::string& filename) = 0;
-    virtual std::string toLower(const std::string& str) = 0;
+    static std::string toLower(const std::string& str);
 };

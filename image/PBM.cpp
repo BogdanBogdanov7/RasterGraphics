@@ -168,11 +168,20 @@ void PBM::save(const std::string& filename) const
     file.close();
 }
 
+void PBM::grayscale()
+{
+    //няма ефект, защото е само черно и бяло
+} 
+void PBM::monochrome() 
+{
+    //няма ефект, защото е само черно и бяло
+}
+
 void PBM::negative()
 {
-    for(auto& row : pixels)
+    for(auto row : pixels)
     {
-        for(auto& pixel : row)
+        for(auto pixel : row)
         {
             pixel = !pixel; //обръща цветовете
         }
