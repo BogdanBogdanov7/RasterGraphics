@@ -214,7 +214,7 @@ void PPM::negative()
 void PPM::rotate(Direction direction)
 {
     std::vector<std::vector<Pixel>> rotated;
-    if(direction == Left)
+    if(direction == Direction::Left)
     {
         rotated.resize(width, std::vector<Pixel>(height));
         for(int y = 0; y < height; y++)

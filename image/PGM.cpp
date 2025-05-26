@@ -194,7 +194,7 @@ void PGM::negative()
 void PGM::rotate(Direction direction)
 {
     std::vector<std::vector<int>> rotated;
-    if(direction == Left)
+    if(direction == Direction::Left)
     {
         rotated.resize(width, std::vector<int>(height));
         for(int y = 0; y < height; y++)

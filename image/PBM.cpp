@@ -191,7 +191,7 @@ void PBM::negative()
 void PBM::rotate(Direction direction)
 {
     std::vector<std::vector<bool>> rotated;
-    if(direction == Left)
+    if(direction == Direction::Left)
     {
         rotated.assign(width, std::vector<bool>(height));
         for(int y = 0; y < height; y++)

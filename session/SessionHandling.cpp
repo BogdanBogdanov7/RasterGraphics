@@ -20,6 +20,7 @@ void SessionHandling::load(const std::vector<std::string>& filenames)
         {
             Image* img = ImageFactory::createImage(file);
             img->load(file);
+            img->setName(file);
             newSession->addImage(img);
             std::cout << "Image \"" << file << "\" added" << std::endl;
         }

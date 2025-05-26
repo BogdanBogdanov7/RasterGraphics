@@ -60,7 +60,7 @@ int main()
         {
             sessionHandler.undo();
         }
-        else if(Utils::toLower(command) == "info")
+        else if(Utils::toLower(command) == "session_info")
         {
             sessionHandler.sessionInfo();
         }
@@ -86,7 +86,7 @@ int main()
         }
         else if(Utils::toLower(command) == "rotate")
         {
-            if(args.size() != 2 || args[1] != "left" || args[1] != "right")
+            if(args.size() != 2 || (args[1] != "left" && args[1] != "right"))
             {
                 std::cout << "Few arguments written or invalid direction." << std::endl;
                 std::cout << "Format: rotate <left/right>" << std::endl;

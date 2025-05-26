@@ -2,6 +2,11 @@
 #include "Transformation.h"
 #include "Rotate.h"
 
+Rotate::Rotate(Direction direction)
+{
+    this->direction = direction;
+}
+
 void Rotate::apply(Image* image) const
 {
     image->rotate(direction);
@@ -9,7 +14,7 @@ void Rotate::apply(Image* image) const
 
 std::string Rotate::getName() const
 {
-    return (direction == Left) ? "rotate left" : "rotate right";
+    return (direction == Direction::Left) ? "rotate left" : "rotate right";
 }
 
 Transformation* Rotate::clone() const
