@@ -96,6 +96,32 @@ int main()
                 sessionHandler.addTransformation("rotate", args[1]);
             }
         }
+        else if(Utils::toLower(command) == "add")
+        {
+            if(args.size() != 2)
+            {
+                std::cout << "Few arguments written." << std::endl;
+            }
+            else
+            {
+                sessionHandler.addOtherImage(args[1]);
+            }
+        }
+        else if(Utils::toLower(command) == "close")
+        {
+            sessionHandler.close();
+        }
+        else if(Utils::toLower(command) == "switch")
+        {
+            if(args.size() != 2)
+            {
+                std::cout << "Few arguments written." << std::endl;
+            }
+            else
+            {
+                sessionHandler.switchTo(std::stoi(args[1]));
+            }
+        }
         else
         {
             std::cout << "No such command found! Type 'help' for a list with available commands. =D" << std::endl;

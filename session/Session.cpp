@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include "../image/Image.h"
 #include "Session.h"
@@ -6,6 +5,7 @@
 #include "../image/PBM.h"
 #include "../image/PGM.h"
 #include "../image/PPM.h"
+#include "../utils/ImageFactory.h"
 
 Session::Session(int id)
 {
@@ -142,6 +142,13 @@ void Session::collage(const std::string& direction, const std::string& firstImag
     std::cout << "New collage " << resultImageName << " created" << std::endl;
 }
 
+void Session::addOtherImage(const std::string& filename)
+{
+    Image* img = ImageFactory::createImage(filename);
+    img->load(filename);
+    addImage(img);
+}
+
 void Session::info() const
 {
     std::cout << "Session ID: " << id << std::endl;
@@ -172,7 +179,6 @@ void Session::info() const
     {
         std::cout << "no transformations found!" << std::endl;
     }
-    std::cout << std::endl;
 }
 
 int Session::getId() const

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -93,7 +92,6 @@ PBM& PBM::operator=(const PBM& other)
 void PBM::load(const std::string& filename)
 {
     std::ifstream file(filename, std::ios::binary);
-
     if(!file.is_open())
     {
         throw std::runtime_error("Can't open the file!");
@@ -106,32 +104,41 @@ void PBM::load(const std::string& filename)
         throw std::runtime_error("Invalid PBM format!");
     }
 
-    //пропускане на коментари
-    char ch;
-    file.get(ch);
-    while(ch == '#')
+    //пропускане на коментари и празни редове преди ширината и височината
+    while (true) 
     {
-        while(file.get(ch) && ch != '\n')
+        char c = file.peek();
+        if(c == '#') 
         {
-            file.get(ch);
+            std::string commentLine;
+            std::getline(file, commentLine);
+        } 
+        else if(isspace(c)) 
+        {
+            file.get();  // пропуска празни места и нови редове
+        } 
+        else 
+        {
+            break;
         }
     }
-    file.unget();
 
     file >> width >> height;
     file.get();
+
+    pixels.resize(height, std::vector<bool>(width));
 
     int bytesForRow = (width + 7) / 8; //всеки байт е 8 пиксела
 
     for(int y = 0; y < height; y++)
     {
-        std::vector<char> row(bytesForRow);
+        std::vector<unsigned char> row(bytesForRow);
         file.read(reinterpret_cast<char*>(row.data()), bytesForRow);
         for(int x = 0; x < width; x++)
         {
             int indexByte = x / 8;
             int indexBit = 7 - (x % 8);
-            pixels[y][x] = ((row[indexByte] >> indexBit) & 1) == 0; //обръщаме ги - 0 е черно, 1 е бяло
+            pixels[y][x] = ((row[indexByte] >> indexBit) & 1) != 0; //обръщаме ги - 0 е черно, 1 е бяло
         }
     }
 
@@ -152,16 +159,16 @@ void PBM::save(const std::string& filename) const
     int bytesForRow = (width + 7) / 8;
     for(int y = 0; y < height; y++)
     {
-        std::vector<char> row(bytesForRow, 0);
+        std::vector<unsigned char> row(bytesForRow, 0);
         for(int x = 0; x < width; x++)
         {
-            if(!pixels[y][x]) //белият пиксел е 1, черният е 0
+            if(pixels[y][x]) //ако пикселът е 1 (т.е бял)
             {
-                continue;
+                int indexByte = x / 8;
+                int indexBit = 7 - (x % 8);
+                row[indexByte] |= (1 << indexBit);
             }
-            int indexByte = x / 8;
-            int indexBit = 7 - (x % 8);
-            row[indexByte] |= (1 << indexBit);
+            
         }
         file.write(reinterpret_cast<const char*>(row.data()), bytesForRow);
     }
@@ -179,13 +186,14 @@ void PBM::monochrome()
 
 void PBM::negative()
 {
-    for(auto row : pixels)
+    for(auto& row : pixels)
     {
-        for(auto pixel : row)
+        for(std::vector<bool>::reference pixel : row)
         {
-            pixel = !pixel; //обръща цветовете
+            pixel = !pixel;
         }
     }
+    //std::cout << "width = " << width << ", height = " << height << std::endl;
 }
 
 void PBM::rotate(Direction direction)

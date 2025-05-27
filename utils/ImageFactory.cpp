@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include "../image/PBM.h"
 #include "../image/PGM.h"

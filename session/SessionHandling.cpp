@@ -1,4 +1,3 @@
-#include <iostream>
 #include "SessionHandling.h"
 #include "../utils/ImageFactory.h"
 #include "../image/PBM.h"
@@ -171,6 +170,22 @@ void SessionHandling::addTransformation(const std::string& tName, const std::str
     }
 }
 
+void SessionHandling::switchTo(int id)
+{
+    for(Session* session : sessions)
+    {
+        if(session->getId() == id)
+        {
+            currentSessionId = id;
+            std::cout << "You switched to session with ID: " << id << "!" << std::endl;
+            session->info();
+            return;
+        }
+    }
+
+    std::cout << "No session found with ID: " << id << "!" << std::endl;
+}
+
 void SessionHandling::collage(const std::string& direction, const std::string& firstImageName, const std::string& secondImageName, const std::string& resultImageName)
 {
     Session* current = getCurrentSession();
@@ -239,6 +254,59 @@ void SessionHandling::collage(const std::string& direction, const std::string& f
     current->addImage(res);
 
     std::cout << "New collage \"" << resultImageName << "\" created" << std::endl;
+}
+
+void SessionHandling::addOtherImage(const std::string& filename)
+{
+    Session* current = getCurrentSession();
+    if(!current)
+    {
+        std::cout << "No sessions are active!" << std::endl;
+        return;
+    }
+
+    try
+    {
+        Image* image = ImageFactory::createImage(filename);
+        image->load(filename);
+        image->setName(filename);
+        current->addImage(image);
+        std::cout << "Image \"" << filename << "\" added" << std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error loading file \"" << filename << "\": " << e.what() << std::endl;
+    }
+}
+
+void SessionHandling::close()
+{
+    if(currentSessionId == -1)
+    {
+        std::cout << "No active session!" << std::endl;
+        return;
+    }
+
+    for(auto it = sessions.begin(); it != sessions.end(); it++)
+    {
+        if((*it)->getId() == currentSessionId)
+        {
+            delete *it;
+            sessions.erase(it);
+            break;
+        }
+    }
+
+    if(sessions.empty())
+    {
+        currentSessionId = -1;
+        std::cout << "Session closed. No active sessions remaining." << std::endl;
+    }
+    else
+    {
+        currentSessionId = sessions.back()->getId();
+        std::cout << "Session closed. Switched to session: " << currentSessionId << std::endl;
+    }
 }
 
 void SessionHandling::help()
