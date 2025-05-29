@@ -7,9 +7,7 @@
 class PGM : public Image
 {
 private:
-    std::string name;
-    int width;
-    int height;
+    int width, height;
     int maxGrayValue;
     std::vector<std::vector<int>> pixels;
 

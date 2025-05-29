@@ -9,6 +9,7 @@ enum Direction {Left, Right};
 class Image
 {
 protected:
+    std::string name;
     Type type;
 
 public:

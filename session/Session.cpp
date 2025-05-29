@@ -38,17 +38,11 @@ void Session::undo()
 
 void Session::save()
 {
+    applyTransformations();
     for(Image* img : image)
     {
-        Image* changedImage = img->clone();
-        for(Transformation* t : transformations)
-        {
-            t->apply(changedImage);
-        }
-        changedImage->save(img->getName());
-        delete changedImage;
+        img->save(img->getName());
     }
-    transformations.clear();
 }
 
 void Session::saveAs(const std::string& name)
@@ -62,6 +56,18 @@ void Session::saveAs(const std::string& name)
         }
         changedImage->save(name);
         delete changedImage;
+    }
+    transformations.clear();
+}
+
+void Session::applyTransformations()
+{
+    for(Image*& img : image)
+    {
+        for(Transformation* transformation : transformations)
+        {
+            transformation->apply(img);
+        }
     }
     transformations.clear();
 }
@@ -149,6 +155,11 @@ void Session::addOtherImage(const std::string& filename)
     addImage(img);
 }
 
+bool Session::isEmpty() const
+{
+    return image.empty();
+}
+
 void Session::info() const
 {
     std::cout << "Session ID: " << id << std::endl;
@@ -174,6 +185,7 @@ void Session::info() const
         {
             std::cout << transformation->getName() << " ";
         }
+        std::cout << std::endl;
     }
     else
     {

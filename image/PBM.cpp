@@ -113,7 +113,7 @@ void PBM::load(const std::string& filename)
             std::string commentLine;
             std::getline(file, commentLine);
         } 
-        else if(isspace(c)) 
+        else if(isspace(c))
         {
             file.get();  // пропуска празни места и нови редове
         } 

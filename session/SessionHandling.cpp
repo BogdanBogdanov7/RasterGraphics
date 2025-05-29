@@ -12,6 +12,7 @@ void SessionHandling::load(const std::vector<std::string>& filenames)
 {
     Session* newSession = new Session(nextSessionId);
     nextSessionId++;
+    std::cout << "Session with ID: " << newSession->getId() << " started" << std::endl;
 
     for(const std::string& file : filenames)
     {
@@ -27,12 +28,18 @@ void SessionHandling::load(const std::vector<std::string>& filenames)
         {
             std::cerr << "Error loading file \"" << file << "\": " << e.what() << std::endl;
         }
-        
+    }
+
+    if(newSession->isEmpty())
+    {
+        std::cerr << "No valid images loaded. The session will not be created!" << std::endl;
+        nextSessionId--;
+        delete newSession;
+        return;
     }
 
     sessions.push_back(newSession);
     currentSessionId = newSession->getId();
-    std::cout << "Session with ID: " << currentSessionId << " started" << std::endl;
 }
 
 Session* SessionHandling::getCurrentSession() const
@@ -305,7 +312,7 @@ void SessionHandling::close()
     else
     {
         currentSessionId = sessions.back()->getId();
-        std::cout << "Session closed. Switched to session: " << currentSessionId << std::endl;
+        std::cout << "Session closed. Switched to session with ID: " << currentSessionId << "." << std::endl;
     }
 }
 

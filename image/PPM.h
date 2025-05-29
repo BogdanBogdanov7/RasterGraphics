@@ -12,7 +12,6 @@ struct Pixel
 class PPM : public Image
 {
 private:
-    std::string name;
     int width, height;
     int maxColorValue;
     std::vector<std::vector<Pixel>> pixels;

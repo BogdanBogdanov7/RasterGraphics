@@ -19,10 +19,12 @@ public:
     void undo();
     void save();
     void saveAs(const std::string& name);
+    void applyTransformations();
     
     void collage(const std::string& direction, const std::string& firstImageName, const std::string& secondImageName, const std::string& resultImageName);
     void addOtherImage(const std::string& filename);
 
+    bool isEmpty() const;
     void info() const;
 
     int getId() const;
