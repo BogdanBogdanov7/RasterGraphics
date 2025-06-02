@@ -111,7 +111,7 @@ void PBM::load(const std::string& filename)
         if(c == '#') 
         {
             std::string commentLine;
-            std::getline(file, commentLine);
+            std::getline(file, commentLine); //ако е коментар, чете целия ред, т.е. го пропуска изцяло този ред
         } 
         else if(isspace(c))
         {
@@ -119,12 +119,12 @@ void PBM::load(const std::string& filename)
         } 
         else 
         {
-            break;
+            break; //спира като стигне до width и height
         }
     }
 
     file >> width >> height;
-    file.get();
+    file.get(); //пропуска символите след height
 
     pixels.resize(height, std::vector<bool>(width));
 
@@ -193,7 +193,6 @@ void PBM::negative()
             pixel = !pixel;
         }
     }
-    //std::cout << "width = " << width << ", height = " << height << std::endl;
 }
 
 void PBM::rotate(Direction direction)

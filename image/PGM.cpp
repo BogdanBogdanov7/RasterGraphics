@@ -111,17 +111,23 @@ void PGM::load(const std::string& filename)
         throw std::runtime_error("Invalid PGM format!");
     }
 
-    //пропускане на коментари
-    char ch;
-    file.get(ch);
-    while(ch == '#')
+    while (true) 
     {
-        while(file.get(ch) && ch != '\n')
+        char c = file.peek();
+        if(c == '#') 
         {
-            file.get(ch);
+            std::string commentLine;
+            std::getline(file, commentLine); //ако е коментар, чете целия ред, т.е. го пропуска изцяло този ред
+        } 
+        else if(isspace(c))
+        {
+            file.get();  // пропуска празни места и нови редове
+        } 
+        else 
+        {
+            break; //спира като стигне до width и height
         }
     }
-    file.unget();
 
     file >> width >> height >> maxGrayValue;
     file.get();
